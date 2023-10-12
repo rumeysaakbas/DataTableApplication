@@ -51,6 +51,7 @@
               </tr>
             </tfoot>
           </table>
+          <div id="pagination-container"></div>
         </div>
       </div>
     </div>

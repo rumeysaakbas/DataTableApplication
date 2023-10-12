@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\Paginator;
 
 class TableController extends Controller
 {
@@ -47,7 +49,7 @@ class TableController extends Controller
         $sortType = $request->input('order.0.dir');
         $columnName = $columnNames[$orderColumnIndex]['data'];
 
-        $query->orderBy($columnName, $sortType);
+        //$query->orderBy($columnName, $sortType);
 
         if (!empty($request->input('search.value'))) 
         {
@@ -97,9 +99,11 @@ class TableController extends Controller
 
         $start = $request->input('start');
         $length = $request->input('length');
-        $query->offset($start)->paginate($length);
-        
-        $data = $query->get();
+
+        $data = $query->paginate($length);
+
+        // $pageNumber = ($start / $length) + 1;
+        // $data = $query->paginate($length, ['name', 'email', 'post', 'city', 'created_at', 'salary'], 'page', $pageNumber);
 
         return response()->json([
             'draw' => intval($request->input('draw')),
@@ -107,6 +111,7 @@ class TableController extends Controller
             'recordsFiltered' => $totalRecords,
             'data' => $data,
         ]);
-
+        
     }
+
 }
